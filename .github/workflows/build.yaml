@@ -1,0 +1,26 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+      - deploy
+
+jobs:
+  api:
+    name: API
+    uses: jimmydrinkscoffee/niall/.github/workflows/docker.yaml@main
+    with:
+      context: .
+      file: ./apps/api/Dockerfile
+      tag: vbphung/niall-api
+    secrets: inherit
+
+  indexer:
+    name: Indexer
+    uses: jimmydrinkscoffee/niall/.github/workflows/docker.yaml@main
+    with:
+      context: .
+      file: ./apps/indexer/Dockerfile
+      tag: vbphung/niall-indexer
+    secrets: inherit

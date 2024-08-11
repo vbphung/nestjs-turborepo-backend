@@ -1,0 +1,11 @@
+{
+  "name": "@niall/typescript",
+  "license": "MIT",
+  "files": [
+    "base.json",
+    "nest.json"
+  ],
+  "devDependencies": {
+    "typescript": "^5.1.3"
+  }
+}

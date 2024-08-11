@@ -1,0 +1,15 @@
+{
+  "name": "@niall/nest-webpack",
+  "license": "MIT",
+  "files": [
+    "webpack.config.js"
+  ],
+  "dependencies": {
+    "@swc/cli": "^0.4.0",
+    "@swc/core": "^1.7.10",
+    "swc-loader": "^0.2.6"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.0.0"
+  }
+}
