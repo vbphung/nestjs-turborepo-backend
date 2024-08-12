@@ -15,7 +15,7 @@ export class AppService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    this.consumer.run({
+    await this.consumer.run({
       autoCommit: true,
       eachMessage: async (msg: EachMessagePayload) => {
         const payload = await this.schemaRegistry.decode(msg.message.value)
