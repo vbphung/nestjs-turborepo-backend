@@ -10,16 +10,6 @@ import {
 @Module({})
 export class KafkaModule {
   static register(name: string, opts: IKafkaModuleOptions): DynamicModule {
-    if (!opts.connect) {
-      throw new Error("KafkaModule.register: connect is required")
-    }
-
-    if (!name) {
-      throw new Error("KafkaModule.register: name is required")
-    }
-
-    name = name.toUpperCase()
-
     type provOpt = {
       opt: any
       getProv: (name: string, conf: any) => Provider

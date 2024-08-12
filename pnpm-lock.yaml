@@ -99,6 +99,9 @@ importers:
 
   apps/indexer:
     dependencies:
+      '@kafkajs/confluent-schema-registry':
+        specifier: ^3.3.0
+        version: 3.3.0
       '@nestjs/common':
         specifier: ^10.0.0
         version: 10.3.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -114,6 +117,9 @@ importers:
       '@niall/kafka':
         specifier: workspace:*
         version: link:../../packages/kafka
+      kafkajs:
+        specifier: ^2.2.4
+        version: 2.2.4
       reflect-metadata:
         specifier: ^0.2.0
         version: 0.2.2
