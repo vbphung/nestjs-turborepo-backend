@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common"
-import { IPet, PetService } from "@niall/pet"
+import { IPet, PetRepo } from "@niall/pet"
 
 @Injectable()
 export class AppService {
-  constructor(private readonly pets: PetService) {}
+  constructor(private readonly pets: PetRepo) {}
 
   async createPets(names: string[]): Promise<IPet[]> {
     const now = new Date()

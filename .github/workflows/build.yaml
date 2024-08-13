@@ -14,3 +14,12 @@ jobs:
       file: ./apps/indexer/Dockerfile
       tag: vbphung/niall-indexer
     secrets: inherit
+
+  shop:
+    name: Shop
+    uses: jimmydrinkscoffee/niall-monorepo/.github/workflows/docker.yaml@main
+    with:
+      context: .
+      file: ./apps/shop/Dockerfile
+      tag: vbphung/niall-shop
+    secrets: inherit

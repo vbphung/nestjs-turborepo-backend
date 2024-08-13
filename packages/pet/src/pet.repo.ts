@@ -5,7 +5,7 @@ import { IPet } from "./pet.interface"
 import { Pet } from "./pet.schema"
 
 @Injectable()
-export class PetService {
+export class PetRepo {
   constructor(@InjectModel(Pet.name) private readonly model: Model<Pet>) {}
 
   async createList(pets: IPet[]): Promise<IPet[]> {
