@@ -1,7 +1,11 @@
+import { config } from "dotenv"
+
 export const kafkaName = "YOUR_VOICE_MATTERS"
 export const kafkaConsumerProvider = `${kafkaName}_KAFKA_CONSUMER`
 export const kafkaProducerProvider = `${kafkaName}_KAFKA_PRODUCER`
 export const kafkaSchemaRegistryProvider = `${kafkaName}_SCHEMA_REGISTRY`
+
+config()
 
 export const kafkaBroker = process.env.KAFKA_BROKER
 export const kafkaUsername = process.env.KAFKA_USERNAME

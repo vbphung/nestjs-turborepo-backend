@@ -2,6 +2,7 @@ import { SchemaRegistry } from "@kafkajs/confluent-schema-registry"
 import { SchemaRegistryAPIClientArgs } from "@kafkajs/confluent-schema-registry/dist/api"
 import { Provider } from "@nestjs/common"
 import {
+  Consumer,
   ConsumerConfig,
   Kafka,
   KafkaConfig,
@@ -50,7 +51,7 @@ export function getConsumerProvider(
 ): Provider {
   return {
     provide: `${name}_KAFKA_CONSUMER`,
-    useFactory: async (kafka: Kafka): Promise<void> => {
+    useFactory: async (kafka: Kafka): Promise<Consumer> => {
       const consumer = kafka.consumer(conf)
       await consumer.connect()
       await Promise.all(
@@ -58,6 +59,7 @@ export function getConsumerProvider(
           await consumer.subscribe({ topic })
         }),
       )
+      return consumer
     },
     inject: [`${name}_KAFKA_CONNECT`],
   }

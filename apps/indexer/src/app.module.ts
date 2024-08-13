@@ -5,9 +5,6 @@ import {
   kafkaGroupId,
   kafkaName,
   kafkaPassword,
-  kafkaSchemaRegistryPassword,
-  kafkaSchemaRegistryUrl,
-  kafkaSchemaRegistryUsername,
   kafkaTopic,
   kafkaUsername,
 } from "./app.config"
@@ -19,6 +16,7 @@ import { AppService } from "./app.service"
       connect: {
         brokers: [kafkaBroker],
         connectionTimeout: 1000,
+        ssl: true,
         sasl: {
           mechanism: "plain",
           username: kafkaUsername,
@@ -34,13 +32,6 @@ import { AppService } from "./app.service"
         groupId: kafkaGroupId,
         heartbeatInterval: 3000,
         maxBytesPerPartition: 1000000,
-      },
-      schemaRegistry: {
-        host: kafkaSchemaRegistryUrl,
-        auth: {
-          username: kafkaSchemaRegistryUsername,
-          password: kafkaSchemaRegistryPassword,
-        },
       },
     }),
   ],
