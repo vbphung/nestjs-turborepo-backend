@@ -16,7 +16,9 @@ export class InstrumentationOpts {
   traceUrl: string
 }
 
-export function getOtelSdk(opts: InstrumentationOpts): NodeSDK {
+export function getOtelSdk(opts?: InstrumentationOpts): NodeSDK {
+  opts = validateOpts(opts)
+
   const metricReader = new PrometheusExporter({
     port: opts.metricPort,
   })
@@ -41,4 +43,15 @@ export function getOtelSdk(opts: InstrumentationOpts): NodeSDK {
       ],
     }),
   })
+}
+
+function validateOpts(opts?: InstrumentationOpts): InstrumentationOpts {
+  if (!opts) {
+    return {
+      metricPort: Number(process.env.OTEL_METRIC_PORT),
+      traceUrl: String(process.env.OTEL_TRACE_URL),
+    }
+  }
+
+  return opts
 }

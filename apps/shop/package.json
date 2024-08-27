@@ -25,6 +25,7 @@
     "@nestjs/mongoose": "^10.0.10",
     "@nestjs/platform-express": "^10.0.0",
     "@niall/pet": "workspace:*",
+    "@niall/otel": "workspace:*",
     "dotenv": "^16.4.5",
     "mongoose": "^8.5.2",
     "reflect-metadata": "^0.2.0",
