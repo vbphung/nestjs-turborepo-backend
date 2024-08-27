@@ -1,0 +1,82 @@
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector:0.107.0
+    container_name: niall-otel-collector
+    ports:
+      - 1888:1888
+      - 8888:8888
+      - 8889:8889
+      - 13133:13133
+      - 4317:4317
+      - 4318:4318
+      - 55679:55679
+    volumes:
+      - ./etc/otel-collector.yaml:/etc/otel-collector.yaml
+    command: --config=/etc/otel-collector.yaml
+    depends_on:
+      - tempo
+      - prometheus
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: niall-tempo
+    ports:
+      - 14268
+      - 3200
+      - 4317
+      - 4318
+      - 9411
+    volumes:
+      - ./etc/tempo.yaml:/etc/tempo.yaml
+    command: -config.file=/etc/tempo.yaml
+
+  loki:
+    image: grafana/loki:1.4.1
+    container_name: niall-loki
+    environment:
+      - JAEGER_AGENT_HOST=tempo
+      - JAEGER_ENDPOINT=http://tempo:14268/api/traces
+      - JAEGER_SAMPLER_TYPE=const
+      - JAEGER_SAMPLER_PARAM=1
+    ports:
+      - 3100:3100
+    volumes:
+      - ./etc/loki.yaml:/etc/loki/loki.yaml
+    command: -config.file=/etc/loki/loki.yaml
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: niall-promtail
+    volumes:
+      - ./etc/promtail.yaml:/etc/promtail/promtail.yaml
+    command: -config.file=/etc/promtail/promtail.yaml
+    depends_on:
+      - loki
+
+  prometheus:
+    image: prom/prometheus:v2.53.2
+    container_name: niall-prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./etc/prometheus.yaml:/etc/prometheus.yaml
+    command:
+      - --config.file=/etc/prometheus.yaml
+      - --web.enable-remote-write-receiver
+      - --enable-feature=exemplar-storage
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:11.1.4
+    container_name: niall-grafana
+    ports:
+      - 3000:3000
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    depends_on:
+      - prometheus
+      - tempo
+      - loki
