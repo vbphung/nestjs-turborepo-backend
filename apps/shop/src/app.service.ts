@@ -22,6 +22,8 @@ export class AppService {
       messages: [{ value: JSON.stringify(recs) }],
     })
 
+    this.logger.log(JSON.stringify(recs))
+
     return recs
   }
 

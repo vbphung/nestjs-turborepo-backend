@@ -1,7 +1,21 @@
 import { config } from "dotenv"
+import pkg from "../package.json"
+
+export { pkg }
+export const apiPort = 9000
+export const apiPrefix = `api/${pkg.name}/v${pkg.version}`
+export const swaggerPrefix = `${apiPrefix}/docs`
+export const excludedRoutes = [
+  `${swaggerPrefix}`,
+  `${swaggerPrefix}/swagger-ui-init.js`,
+  `${swaggerPrefix}/swagger-ui.css`,
+  `${swaggerPrefix}/swagger-ui-bundle.js`,
+  `${swaggerPrefix}/swagger-ui-standalone-preset.js`,
+  `${swaggerPrefix}/favicon-32x32.png`,
+  `/favicon.ico`,
+]
 
 export const kafkaName = "YOUR_VOICE_MATTERS"
-export const kafkaConsumerProvider = `${kafkaName}_KAFKA_CONSUMER`
 export const kafkaProducerProvider = `${kafkaName}_KAFKA_PRODUCER`
 export const kafkaSchemaRegistryProvider = `${kafkaName}_SCHEMA_REGISTRY`
 

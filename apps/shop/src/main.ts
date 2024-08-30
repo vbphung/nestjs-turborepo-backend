@@ -1,30 +1,40 @@
 import { NestFactory } from "@nestjs/core"
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
-import { Logger } from "@niall/log"
-import { startOtelSdk } from "@niall/otel"
-import { description, name, version } from "../package.json"
-import { otelMetricPort, otelTraceUrl } from "./app.config"
+import { startOtlpSdk } from "@niall/otlp"
+import { Logger } from "@niall/pino"
+import {
+  apiPort,
+  apiPrefix,
+  otelMetricPort,
+  otelTraceUrl,
+  pkg,
+  swaggerPrefix,
+} from "./app.config"
 import { AppModule } from "./app.module"
 
 async function bootstrap() {
-  startOtelSdk({
+  startOtlpSdk({
     metricPort: otelMetricPort,
     traceUrl: otelTraceUrl,
+    service: pkg.name,
   })
 
   const app = await NestFactory.create(AppModule)
+  app.setGlobalPrefix(apiPrefix)
   app.useLogger(app.get(Logger))
 
   const docsConf = new DocumentBuilder()
-    .setTitle(name.toUpperCase())
-    .setDescription(description)
-    .setVersion(version)
+    .setTitle(pkg.name.toUpperCase())
+    .setDescription(pkg.description)
+    .setVersion(pkg.version)
     .build()
 
   const docs = SwaggerModule.createDocument(app, docsConf)
-  SwaggerModule.setup("docs", app, docs)
+  SwaggerModule.setup(swaggerPrefix, app, docs)
 
-  await app.listen(9000)
+  app.get(Logger)?.log(`Listening on http://localhost:${apiPort}/${apiPrefix}`)
+
+  await app.listen(apiPort)
 }
 
 bootstrap()

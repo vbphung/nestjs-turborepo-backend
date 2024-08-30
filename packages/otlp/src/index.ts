@@ -5,10 +5,10 @@ import { OpenTelemetryModuleOptions } from "nestjs-otel/lib/interfaces"
 export * from "./tracing"
 
 @Module({})
-export class OtelModule {
+export class OtlpModule {
   static forRoot(opts: OpenTelemetryModuleOptions): DynamicModule {
     return {
-      module: OtelModule,
+      module: OtlpModule,
       global: true,
       imports: [OpenTelemetryModule.forRoot(opts)],
     }

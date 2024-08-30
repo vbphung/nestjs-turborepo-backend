@@ -1,10 +1,16 @@
 import { Module } from "@nestjs/common"
 import { MongooseModule } from "@nestjs/mongoose"
 import { KafkaModule } from "@niall/kafka"
-import { LogModule } from "@niall/log"
-import { OtelModule } from "@niall/otel"
+import { OtlpModule } from "@niall/otlp"
 import { PetModule } from "@niall/pet"
-import { kafkaBroker, kafkaName, mongoDb, mongoUri } from "./app.config"
+import { PinoModule } from "@niall/pino"
+import {
+  excludedRoutes,
+  kafkaBroker,
+  kafkaName,
+  mongoDb,
+  mongoUri,
+} from "./app.config"
 import { AppController } from "./app.controller"
 import { AppService } from "./app.service"
 
@@ -24,13 +30,16 @@ import { AppService } from "./app.service"
       },
       producer: {},
     }),
-    OtelModule.forRoot({
+    OtlpModule.forRoot({
       metrics: {
         hostMetrics: true,
-        apiMetrics: { enable: true },
+        apiMetrics: {
+          enable: true,
+          ignoreRoutes: excludedRoutes,
+        },
       },
     }),
-    LogModule,
+    PinoModule.forRoot(excludedRoutes),
     PetModule,
   ],
   controllers: [AppController],

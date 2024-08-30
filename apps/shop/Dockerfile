@@ -28,6 +28,6 @@ WORKDIR /app
 
 COPY --from=builder /app .
 
-EXPOSE 3000
+EXPOSE 9000
 
 CMD node apps/shop/dist/main.js

@@ -8,15 +8,18 @@ import {
 import { PrometheusExporter } from "@opentelemetry/exporter-prometheus"
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http"
 import { B3InjectEncoding, B3Propagator } from "@opentelemetry/propagator-b3"
+import { Resource } from "@opentelemetry/resources"
 import { NodeSDK } from "@opentelemetry/sdk-node"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
+import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions"
 
-class OtelOpts {
+class OtlpOpts {
   metricPort: number
   traceUrl: string
+  service: string
 }
 
-export function startOtelSdk(opts: OtelOpts): void {
+export function startOtlpSdk(opts: OtlpOpts): void {
   const { metricPort, traceUrl } = opts
 
   const metricReader = new PrometheusExporter({
@@ -42,6 +45,7 @@ export function startOtelSdk(opts: OtelOpts): void {
         new B3Propagator({ injectEncoding: B3InjectEncoding.MULTI_HEADER }),
       ],
     }),
+    resource: new Resource({ [ATTR_SERVICE_NAME]: opts.service }),
   })
 
   process.on("SIGTERM", () => shutdown(sdk))

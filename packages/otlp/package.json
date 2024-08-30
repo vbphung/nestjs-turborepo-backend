@@ -1,5 +1,5 @@
 {
-  "name": "@niall/otel",
+  "name": "@niall/otlp",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -31,8 +31,10 @@
     "@opentelemetry/exporter-prometheus": "^0.52.1",
     "@opentelemetry/exporter-trace-otlp-http": "^0.52.1",
     "@opentelemetry/propagator-b3": "^1.25.1",
+    "@opentelemetry/resources": "^1.26.0",
     "@opentelemetry/sdk-node": "^0.52.1",
     "@opentelemetry/sdk-trace-base": "^1.25.1",
+    "@opentelemetry/semantic-conventions": "^1.27.0",
     "nestjs-otel": "^6.1.1"
   },
   "devDependencies": {

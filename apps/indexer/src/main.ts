@@ -1,13 +1,14 @@
 import { NestFactory } from "@nestjs/core"
-import { Logger } from "@niall/log"
-import { startOtelSdk } from "@niall/otel"
-import { otelMetricPort, otelTraceUrl } from "./app.config"
+import { startOtlpSdk } from "@niall/otlp"
+import { Logger } from "@niall/pino"
+import { otelMetricPort, otelTraceUrl, pkg } from "./app.config"
 import { AppModule } from "./app.module"
 
 async function bootstrap() {
-  startOtelSdk({
+  startOtlpSdk({
     metricPort: otelMetricPort,
     traceUrl: otelTraceUrl,
+    service: pkg.name,
   })
 
   const app = await NestFactory.createMicroservice(AppModule)

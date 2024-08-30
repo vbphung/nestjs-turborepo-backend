@@ -1,8 +1,10 @@
 import { config } from "dotenv"
+import pkg from "../package.json"
+
+export { pkg }
 
 export const kafkaName = "YOUR_VOICE_MATTERS"
 export const kafkaConsumerProvider = `${kafkaName}_KAFKA_CONSUMER`
-export const kafkaProducerProvider = `${kafkaName}_KAFKA_PRODUCER`
 export const kafkaSchemaRegistryProvider = `${kafkaName}_SCHEMA_REGISTRY`
 
 config()

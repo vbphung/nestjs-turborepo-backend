@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common"
 import { KafkaModule } from "@niall/kafka"
-import { LogModule } from "@niall/log"
-import { OtelModule } from "@niall/otel"
+import { OtlpModule } from "@niall/otlp"
+import { PinoModule } from "@niall/pino"
 import { kafkaBroker, kafkaGroupId, kafkaName, kafkaTopic } from "./app.config"
 import { AppService } from "./app.service"
 
@@ -23,13 +23,13 @@ import { AppService } from "./app.service"
         maxBytesPerPartition: 1000000,
       },
     }),
-    OtelModule.forRoot({
+    OtlpModule.forRoot({
       metrics: {
         hostMetrics: true,
         apiMetrics: { enable: false },
       },
     }),
-    LogModule,
+    PinoModule.forRoot(),
   ],
   providers: [AppService],
 })
