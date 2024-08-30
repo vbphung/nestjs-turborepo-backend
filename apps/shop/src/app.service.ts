@@ -35,7 +35,7 @@ export class AppService {
     return recs
   }
 
-  async listPets(names: string[]): Promise<IPet[]> {
-    return await this.pets.listByNames(names)
+  async listPets(): Promise<IPet[]> {
+    return await this.pets.listAll()
   }
 }

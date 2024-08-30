@@ -15,4 +15,8 @@ export class PetRepo {
   async listByNames(names: string[]): Promise<IPet[]> {
     return await this.model.find({ name: { $in: names } }).exec()
   }
+
+  async listAll(): Promise<IPet[]> {
+    return await this.model.find().exec()
+  }
 }
