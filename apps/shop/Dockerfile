@@ -1,7 +1,7 @@
 FROM node:22-alpine as base
 ENV PNPM_HOME=/usr/local/bin
 RUN corepack enable && \ 
-corepack prepare pnpm@9.6.0 --activate
+corepack prepare pnpm@9.9.0 --activate
 
 FROM base as pruner
 WORKDIR /app
