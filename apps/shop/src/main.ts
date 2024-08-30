@@ -1,13 +1,12 @@
 import { NestFactory } from "@nestjs/core"
-import { getOtelSdk } from "@niall/otel"
+import { otelSdk } from "@niall/otel"
 import { AppModule } from "./app.module"
 
 async function bootstrap() {
-  const otel = getOtelSdk()
-  otel.start()
+  otelSdk.start()
 
   const app = await NestFactory.create(AppModule)
-  await app.listen(3000)
+  await app.listen(9000)
 }
 
 bootstrap()

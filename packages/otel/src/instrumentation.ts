@@ -11,20 +11,16 @@ import { B3InjectEncoding, B3Propagator } from "@opentelemetry/propagator-b3"
 import { NodeSDK } from "@opentelemetry/sdk-node"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
 
-export class InstrumentationOpts {
-  metricPort: number
-  traceUrl: string
-}
+const metricPort = Number(process.env.OTEL_METRIC_PORT)
+const traceUrl = process.env.OTEL_TRACE_URL
 
-export function getOtelSdk(opts?: InstrumentationOpts): NodeSDK {
-  opts = validateOpts(opts)
-
+function getOtelSdk(): NodeSDK {
   const metricReader = new PrometheusExporter({
-    port: opts.metricPort,
+    port: metricPort ?? 8081,
   })
 
   const traceExported = new OTLPTraceExporter({
-    url: opts.traceUrl,
+    url: `${traceUrl}/v1/traces`,
   })
 
   const spanProcessor = new BatchSpanProcessor(traceExported)
@@ -45,13 +41,17 @@ export function getOtelSdk(opts?: InstrumentationOpts): NodeSDK {
   })
 }
 
-function validateOpts(opts?: InstrumentationOpts): InstrumentationOpts {
-  if (!opts) {
-    return {
-      metricPort: Number(process.env.OTEL_METRIC_PORT),
-      traceUrl: String(process.env.OTEL_TRACE_URL),
-    }
-  }
+const otelSdk = getOtelSdk()
 
-  return opts
-}
+process.on("SIGTERM", async () => {
+  try {
+    await otelSdk.shutdown()
+    console.log("Otel SDK shutdown successfully")
+  } catch (error) {
+    console.error("Otel SDK shutdown failed", error)
+  } finally {
+    process.exit(0)
+  }
+})
+
+export { otelSdk }

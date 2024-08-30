@@ -1,13 +1,6 @@
 import { Module } from "@nestjs/common"
 import { KafkaModule } from "@niall/kafka"
-import {
-  kafkaBroker,
-  kafkaGroupId,
-  kafkaName,
-  kafkaPassword,
-  kafkaTopic,
-  kafkaUsername,
-} from "./app.config"
+import { kafkaBroker, kafkaGroupId, kafkaName, kafkaTopic } from "./app.config"
 import { AppService } from "./app.service"
 
 @Module({
@@ -16,12 +9,6 @@ import { AppService } from "./app.service"
       connect: {
         brokers: [kafkaBroker],
         connectionTimeout: 1000,
-        ssl: true,
-        sasl: {
-          mechanism: "plain",
-          username: kafkaUsername,
-          password: kafkaPassword,
-        },
         retry: {
           restartOnFailure: () => Promise.resolve(true),
           retries: 5,

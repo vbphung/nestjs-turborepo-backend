@@ -12,7 +12,7 @@ export class AppService implements OnModuleInit {
     await this.consumer.run({
       autoCommit: true,
       eachMessage: async (msg: EachMessagePayload) => {
-        console.log(msg.message.offset, msg.message.value)
+        console.log(msg.message.offset, msg.message.value.toString())
       },
     })
   }

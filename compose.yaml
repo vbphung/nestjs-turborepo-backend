@@ -100,6 +100,45 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+
+  mongo:
+    image: mongo
+    container_name: niall-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: niall
+      MONGO_INITDB_ROOT_PASSWORD: yourvoicematters
+
+  shop:
+    container_name: niall-shop
+    build:
+      context: .
+      dockerfile: apps/shop/Dockerfile
+    ports:
+      - 9000:9000
+    environment:
+      MONGO_URI: mongodb://niall:yourvoicematters@mongo:27017
+      MONGO_DB: test
+      KAFKA_BROKER: kafka:29092
+      KAFKA_TOPIC: pets
+      OTEL_METRIC_PORT: 8081
+      OTEL_TRACE_URL: http://otel-collector:4318
+    depends_on:
+      - kafka
+      - mongo
+
+  indexer:
+    container_name: niall-indexer
+    build:
+      context: .
+      dockerfile: apps/indexer/Dockerfile
+    environment:
+      KAFKA_BROKER: kafka:29092
+      KAFKA_TOPIC: pets
+      KAFKA_GROUP_ID: indexer
+      OTEL_METRIC_PORT: 8081
+      OTEL_TRACE_URL: http://otel-collector:4318
+    depends_on:
+      - kafka
