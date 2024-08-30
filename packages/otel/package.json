@@ -30,13 +30,10 @@
     "@opentelemetry/core": "^1.25.1",
     "@opentelemetry/exporter-prometheus": "^0.52.1",
     "@opentelemetry/exporter-trace-otlp-http": "^0.52.1",
-    "@opentelemetry/instrumentation-pino": "^0.41.0",
     "@opentelemetry/propagator-b3": "^1.25.1",
     "@opentelemetry/sdk-node": "^0.52.1",
     "@opentelemetry/sdk-trace-base": "^1.25.1",
-    "nestjs-otel": "^6.1.1",
-    "nestjs-pino": "^4.1.0",
-    "pino-http": "^10.2.0"
+    "nestjs-otel": "^6.1.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

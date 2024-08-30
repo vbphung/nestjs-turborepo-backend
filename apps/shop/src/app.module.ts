@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common"
 import { MongooseModule } from "@nestjs/mongoose"
-import { ScheduleModule } from "@nestjs/schedule"
 import { KafkaModule } from "@niall/kafka"
-import { LogModule } from "@niall/otel"
+import { LogModule } from "@niall/log"
+import { OtelModule } from "@niall/otel"
 import { PetModule } from "@niall/pet"
 import { kafkaBroker, kafkaName, mongoDb, mongoUri } from "./app.config"
 import { AppController } from "./app.controller"
@@ -10,7 +10,6 @@ import { AppService } from "./app.service"
 
 @Module({
   imports: [
-    ScheduleModule.forRoot(),
     MongooseModule.forRoot(mongoUri, {
       dbName: mongoDb,
     }),
@@ -25,12 +24,13 @@ import { AppService } from "./app.service"
       },
       producer: {},
     }),
-    LogModule.forRoot({
+    OtelModule.forRoot({
       metrics: {
         hostMetrics: true,
         apiMetrics: { enable: true },
       },
     }),
+    LogModule,
     PetModule,
   ],
   controllers: [AppController],

@@ -1,14 +1,19 @@
 import { NestFactory } from "@nestjs/core"
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
-import { Log, otelSdk } from "@niall/otel"
+import { Logger } from "@niall/log"
+import { startOtelSdk } from "@niall/otel"
 import { description, name, version } from "../package.json"
+import { otelMetricPort, otelTraceUrl } from "./app.config"
 import { AppModule } from "./app.module"
 
 async function bootstrap() {
-  otelSdk.start()
+  startOtelSdk({
+    metricPort: otelMetricPort,
+    traceUrl: otelTraceUrl,
+  })
 
   const app = await NestFactory.create(AppModule)
-  app.useLogger(app.get(Log))
+  app.useLogger(app.get(Logger))
 
   const docsConf = new DocumentBuilder()
     .setTitle(name.toUpperCase())

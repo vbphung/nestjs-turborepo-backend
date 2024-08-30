@@ -17,3 +17,6 @@ export const kafkaSchemaRegistryUsername =
   process.env.KAFKA_SCHEMA_REGISTRY_USERNAME
 export const kafkaSchemaRegistryPassword =
   process.env.KAFKA_SCHEMA_REGISTRY_PASSWORD
+
+export const otelMetricPort = Number(process.env.OTEL_METRIC_PORT)
+export const otelTraceUrl = process.env.OTEL_TRACE_URL

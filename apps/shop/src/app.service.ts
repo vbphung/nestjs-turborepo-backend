@@ -1,8 +1,6 @@
 import { Inject, Injectable, Logger } from "@nestjs/common"
-import { Cron, CronExpression } from "@nestjs/schedule"
 import { IPet, PetRepo } from "@niall/pet"
 import { Producer } from "kafkajs"
-import { generate } from "randomstring"
 import { kafkaProducerProvider, kafkaTopic } from "./app.config"
 
 @Injectable()
@@ -13,16 +11,6 @@ export class AppService {
     private readonly pets: PetRepo,
     @Inject(kafkaProducerProvider) private readonly kafka: Producer,
   ) {}
-
-  @Cron(CronExpression.EVERY_10_SECONDS)
-  async happyPush(): Promise<void> {
-    const names: string[] = []
-    for (let i = 0; i < 8; i++) {
-      names.push(generate())
-    }
-
-    this.logger.log(JSON.stringify(await this.createPets(names)))
-  }
 
   async createPets(names: string[]): Promise<IPet[]> {
     const now = new Date()

@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common"
 import { KafkaModule } from "@niall/kafka"
-import { LogModule } from "@niall/otel"
+import { LogModule } from "@niall/log"
+import { OtelModule } from "@niall/otel"
 import { kafkaBroker, kafkaGroupId, kafkaName, kafkaTopic } from "./app.config"
 import { AppService } from "./app.service"
 
@@ -22,12 +23,13 @@ import { AppService } from "./app.service"
         maxBytesPerPartition: 1000000,
       },
     }),
-    LogModule.forRoot({
+    OtelModule.forRoot({
       metrics: {
         hostMetrics: true,
         apiMetrics: { enable: false },
       },
     }),
+    LogModule,
   ],
   providers: [AppService],
 })

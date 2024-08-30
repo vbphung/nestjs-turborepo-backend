@@ -11,10 +11,14 @@ import { B3InjectEncoding, B3Propagator } from "@opentelemetry/propagator-b3"
 import { NodeSDK } from "@opentelemetry/sdk-node"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
 
-const metricPort = Number(process.env.OTEL_METRIC_PORT)
-const traceUrl = process.env.OTEL_TRACE_URL
+class OtelOpts {
+  metricPort: number
+  traceUrl: string
+}
 
-function getOtelSdk(): NodeSDK {
+export function startOtelSdk(opts: OtelOpts): void {
+  const { metricPort, traceUrl } = opts
+
   const metricReader = new PrometheusExporter({
     port: metricPort ?? 8081,
   })
@@ -25,7 +29,7 @@ function getOtelSdk(): NodeSDK {
 
   const spanProcessor = new BatchSpanProcessor(traceExported)
 
-  return new NodeSDK({
+  const sdk = new NodeSDK({
     metricReader,
     spanProcessors: [spanProcessor],
     contextManager: new AsyncLocalStorageContextManager(),
@@ -39,19 +43,19 @@ function getOtelSdk(): NodeSDK {
       ],
     }),
   })
+
+  process.on("SIGTERM", () => shutdown(sdk))
+
+  sdk.start()
 }
 
-const otelSdk = getOtelSdk()
-
-process.on("SIGTERM", async () => {
+async function shutdown(sdk: NodeSDK): Promise<void> {
   try {
-    await otelSdk.shutdown()
+    await sdk.shutdown()
     console.log("Tracing terminated")
   } catch (error) {
     console.error("Error terminating tracing", error)
   } finally {
     process.exit(0)
   }
-})
-
-export { otelSdk }
+}

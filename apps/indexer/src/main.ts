@@ -1,12 +1,17 @@
 import { NestFactory } from "@nestjs/core"
-import { Log, otelSdk } from "@niall/otel"
+import { Logger } from "@niall/log"
+import { startOtelSdk } from "@niall/otel"
+import { otelMetricPort, otelTraceUrl } from "./app.config"
 import { AppModule } from "./app.module"
 
 async function bootstrap() {
-  otelSdk.start()
+  startOtelSdk({
+    metricPort: otelMetricPort,
+    traceUrl: otelTraceUrl,
+  })
 
   const app = await NestFactory.createMicroservice(AppModule)
-  app.useLogger(app.get(Log))
+  app.useLogger(app.get(Logger))
 
   await app.listen()
 }
