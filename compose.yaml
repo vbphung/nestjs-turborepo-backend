@@ -49,6 +49,7 @@ services:
     container_name: niall-promtail
     volumes:
       - ./etc/promtail.yaml:/etc/promtail/promtail.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
     command: -config.file=/etc/promtail/promtail.yaml
     depends_on:
       - loki
@@ -72,6 +73,8 @@ services:
     container_name: niall-grafana
     ports:
       - 3000:3000
+    volumes:
+      - ./etc/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin

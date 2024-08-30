@@ -46,9 +46,9 @@ const otelSdk = getOtelSdk()
 process.on("SIGTERM", async () => {
   try {
     await otelSdk.shutdown()
-    console.log("Otel SDK shutdown successfully")
+    console.log("Tracing terminated")
   } catch (error) {
-    console.error("Otel SDK shutdown failed", error)
+    console.error("Error terminating tracing", error)
   } finally {
     process.exit(0)
   }

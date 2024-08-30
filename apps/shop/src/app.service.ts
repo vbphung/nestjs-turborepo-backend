@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common"
+import { Inject, Injectable, Logger } from "@nestjs/common"
 import { Cron, CronExpression } from "@nestjs/schedule"
 import { IPet, PetRepo } from "@niall/pet"
 import { Producer } from "kafkajs"
@@ -7,6 +7,8 @@ import { kafkaProducerProvider, kafkaTopic } from "./app.config"
 
 @Injectable()
 export class AppService {
+  private readonly logger = new Logger(AppService.name)
+
   constructor(
     private readonly pets: PetRepo,
     @Inject(kafkaProducerProvider) private readonly kafka: Producer,
@@ -19,7 +21,7 @@ export class AppService {
       names.push(generate())
     }
 
-    console.log(JSON.stringify(await this.createPets(names)))
+    this.logger.log(JSON.stringify(await this.createPets(names)))
   }
 
   async createPets(names: string[]): Promise<IPet[]> {

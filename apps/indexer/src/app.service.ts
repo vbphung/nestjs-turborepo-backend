@@ -1,9 +1,11 @@
-import { Inject, Injectable, OnModuleInit } from "@nestjs/common"
+import { Inject, Injectable, Logger, OnModuleInit } from "@nestjs/common"
 import { Consumer, EachMessagePayload } from "kafkajs"
 import { kafkaConsumerProvider } from "./app.config"
 
 @Injectable()
 export class AppService implements OnModuleInit {
+  private readonly logger = new Logger(AppService.name)
+
   constructor(
     @Inject(kafkaConsumerProvider) private readonly consumer: Consumer,
   ) {}
@@ -12,7 +14,7 @@ export class AppService implements OnModuleInit {
     await this.consumer.run({
       autoCommit: true,
       eachMessage: async (msg: EachMessagePayload) => {
-        console.log(msg.message.offset, msg.message.value.toString())
+        this.logger.log(msg.message.value.toString())
       },
     })
   }
