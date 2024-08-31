@@ -114,6 +114,46 @@ services:
       MONGO_INITDB_ROOT_USERNAME: niall
       MONGO_INITDB_ROOT_PASSWORD: yourvoicematters
 
+  redis:
+    image: bitnami/redis:7.4.0
+    container_name: niall-redis
+    ports:
+      - 6378:6379
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+
+  redis01:
+    image: docker.io/bitnami/redis-cluster:7.4
+    container_name: niall-redis01
+    ports:
+      - 6379:6379
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+      REDIS_NODES: redis01 redis02 redis03
+
+  redis02:
+    image: docker.io/bitnami/redis-cluster:7.4
+    container_name: niall-redis02
+    ports:
+      - 6380:6379
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+      REDIS_NODES: redis01 redis02 redis03
+
+  redis03:
+    image: docker.io/bitnami/redis-cluster:7.4
+    container_name: niall-redis03
+    ports:
+      - 6381:6379
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+      REDIS_NODES: redis01 redis02 redis03
+      REDIS_CLUSTER_REPLICAS: 0
+      REDIS_CLUSTER_CREATOR: yes
+    depends_on:
+      - redis01
+      - redis02
+
   shop:
     container_name: niall-shop
     build:
@@ -126,11 +166,14 @@ services:
       MONGO_DB: test
       KAFKA_BROKER: kafka:29092
       KAFKA_TOPIC: pets
+      REDIS_HOSTS: redis:6379
+      REDIS_CLUSTER_HOSTS: redis01:6379,redis02:6379,redis03:6379
       OTEL_METRIC_PORT: 8081
       OTEL_TRACE_URL: http://otel-collector:4318
     depends_on:
       - kafka
       - mongo
+      - redis03
 
   indexer:
     container_name: niall-indexer

@@ -6,6 +6,7 @@ export const apiPort = 9000
 export const apiPrefix = `api/${pkg.name}/v${pkg.version}`
 export const swaggerPrefix = `${apiPrefix}/docs`
 export const excludedRoutes = [
+  `${apiPrefix}`,
   `${swaggerPrefix}`,
   `${swaggerPrefix}/swagger-ui-init.js`,
   `${swaggerPrefix}/swagger-ui.css`,
@@ -15,7 +16,7 @@ export const excludedRoutes = [
   `/favicon.ico`,
 ]
 
-export const kafkaName = "YOUR_VOICE_MATTERS"
+export const kafkaName = `YOUR_VOICE_MATTERS`
 export const kafkaProducerProvider = `${kafkaName}_KAFKA_PRODUCER`
 export const kafkaSchemaRegistryProvider = `${kafkaName}_SCHEMA_REGISTRY`
 
@@ -33,6 +34,9 @@ export const kafkaSchemaRegistryUsername =
   process.env.KAFKA_SCHEMA_REGISTRY_USERNAME
 export const kafkaSchemaRegistryPassword =
   process.env.KAFKA_SCHEMA_REGISTRY_PASSWORD
+
+export const redisHosts = process.env.REDIS_HOSTS.split(",")
+export const redisClusterHosts = process.env.REDIS_CLUSTER_HOSTS.split(",")
 
 export const otelMetricPort = Number(process.env.OTEL_METRIC_PORT)
 export const otelTraceUrl = process.env.OTEL_TRACE_URL
