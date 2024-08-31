@@ -2,4 +2,20 @@
 
 https://en.wikipedia.org/wiki/Neil
 
-Named after a boy that thinks his voice matters.
+The project is named after a boy who believes his voice matters.
+
+## Run the project
+
+```shell
+docker compose up -d --build
+```
+
+## What has this project accomplished?
+
+- Built a monorepo TS backend using Nest and Turborepo adhering to Twelve-Factor principles
+- Set up a monitoring system with
+  - OpenTelemetry (collector)
+  - Prometheus (metrics)
+  - Tempo (traces)
+  - Loki (logs)
+- Deployed a Redis cluster and explored the Redlock algorithm
