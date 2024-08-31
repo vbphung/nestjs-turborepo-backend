@@ -16,7 +16,7 @@ export class PetRepo {
     return await this.model.find({ name: { $in: names } }).exec()
   }
 
-  async listAll(): Promise<IPet[]> {
-    return await this.model.find().exec()
+  async listAll(page: number, limit: number): Promise<IPet[]> {
+    return await this.model.find().skip(page).limit(limit).exec()
   }
 }

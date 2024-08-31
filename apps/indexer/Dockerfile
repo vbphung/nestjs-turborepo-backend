@@ -20,7 +20,8 @@ RUN pnpm i
 
 COPY --from=pruner /app/out/full/ .
 COPY turbo.json turbo.json
-RUN pnpm turbo build --filter=indexer
+RUN pnpm turbo build --filter=indexer && \ 
+pnpm prune --prod
 
 FROM node:22-alpine as exec
 

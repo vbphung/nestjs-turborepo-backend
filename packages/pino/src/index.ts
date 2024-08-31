@@ -1,4 +1,4 @@
-import { DynamicModule, Global, Module } from "@nestjs/common"
+import { DynamicModule, Module } from "@nestjs/common"
 import { context, trace } from "@opentelemetry/api"
 import { Logger, LoggerModule, Params } from "nestjs-pino"
 import { Options } from "pino-http"
@@ -16,7 +16,6 @@ const opts: Options = {
   },
 }
 
-@Global()
 @Module({})
 export class PinoModule {
   static forRoot(excludedRoutes?: string[]): DynamicModule {
