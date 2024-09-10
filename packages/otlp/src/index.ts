@@ -1,8 +1,14 @@
 import { DynamicModule, Module } from "@nestjs/common"
-import { OpenTelemetryModule } from "nestjs-otel"
+import {
+  OpenTelemetryModule,
+  OtelMethodCounter,
+  Span,
+  TraceService,
+} from "nestjs-otel"
 import { OpenTelemetryModuleOptions } from "nestjs-otel/lib/interfaces"
 
 export * from "./tracing"
+export { OtelMethodCounter, Span, TraceService }
 
 @Module({})
 export class OtlpModule {

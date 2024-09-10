@@ -3,13 +3,13 @@ receivers:
     protocols:
       grpc:
       http:
-        cors:
-          allowed_origins:
-            - http://*
-            - https://*
+
+processors:
+  batch:
+    timeout: 100ms
 
 exporters:
-  otlp:
+  otlp/tempo:
     endpoint: tempo:4317
     tls:
       insecure: true
@@ -18,4 +18,5 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [otlp]
+      processors: [batch]
+      exporters: [otlp/tempo]

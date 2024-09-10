@@ -20,5 +20,8 @@ export const kafkaSchemaRegistryUsername =
 export const kafkaSchemaRegistryPassword =
   process.env.KAFKA_SCHEMA_REGISTRY_PASSWORD
 
+export const redisHosts = process.env.REDIS_HOSTS.split(",")
+export const redisClusterHosts = process.env.REDIS_CLUSTER_HOSTS.split(",")
+
 export const otelMetricPort = Number(process.env.OTEL_METRIC_PORT)
 export const otelTraceUrl = process.env.OTEL_TRACE_URL

@@ -1,12 +1,17 @@
 import { DynamicModule, Module } from "@nestjs/common"
 import Client, { Cluster, Redis } from "ioredis"
 import Redlock from "redlock"
+import { REDIS_CLIENT } from "./constants"
 import { RedisService } from "./redis.service"
 
 @Module({})
 export class RedisModule {
   static forRoot(hosts: string[][]): DynamicModule {
-    if (!hosts || hosts.length <= 0) {
+    if (
+      !hosts ||
+      hosts.length <= 0 ||
+      hosts.every((h) => !h || h.length <= 0)
+    ) {
       throw new Error("At least one host is required")
     }
 
@@ -34,8 +39,8 @@ export class RedisModule {
       global: true,
       providers: [
         {
-          provide: Cluster,
-          useValue: clts.find((c) => c instanceof Cluster),
+          provide: REDIS_CLIENT,
+          useValue: clts[0],
         },
         {
           provide: Redlock,

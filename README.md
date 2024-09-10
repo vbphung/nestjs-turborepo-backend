@@ -18,4 +18,5 @@ docker compose up -d --build
   - Prometheus (metrics)
   - Tempo (traces)
   - Loki (logs)
-- Deployed a Redis cluster and explored the Redlock algorithm
+  - Grafana (dashboards)
+- Deployed a Redis cluster and examined the Redlock algorithm
