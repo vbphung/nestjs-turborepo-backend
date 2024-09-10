@@ -35,7 +35,7 @@ export class AppService {
     if (!span) {
       this.logger.error("Span not found")
     } else {
-      span.addEvent("pets created", { count: recs.length }).end()
+      span.addEvent("pets inserted", { count: recs.length }).end()
     }
 
     return recs

@@ -10,13 +10,11 @@ The project is named after a boy who believes his voice matters.
 docker compose up -d --build
 ```
 
-## What has this project accomplished?
+## Tech stack
 
-- Built a monorepo TS backend using Nest and Turborepo adhering to Twelve-Factor principles
-- Set up a monitoring system with
-  - OpenTelemetry (collector)
-  - Prometheus (metrics)
-  - Tempo (traces)
-  - Loki (logs)
-  - Grafana (dashboards)
-- Deployed a Redis cluster and examined the Redlock algorithm
+- NestJS + Turborepo
+- MongoDB
+- Kafka
+- Redis
+- OpenTelemetry
+- Loki + Prometheus + Tempo + Grafana
