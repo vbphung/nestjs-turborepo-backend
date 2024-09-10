@@ -2,7 +2,15 @@ import { Module } from "@nestjs/common"
 import { KafkaModule } from "@niall/kafka"
 import { OtlpModule } from "@niall/otlp"
 import { PinoModule } from "@niall/pino"
-import { kafkaBroker, kafkaGroupId, kafkaName, kafkaTopic } from "./app.config"
+import { RedisModule } from "@niall/redis"
+import {
+  kafkaBroker,
+  kafkaGroupId,
+  kafkaName,
+  kafkaTopic,
+  redisClusterHosts,
+  redisHosts,
+} from "./app.config"
 import { AppService } from "./app.service"
 
 @Module({
@@ -23,6 +31,10 @@ import { AppService } from "./app.service"
         maxBytesPerPartition: 1000000,
       },
     }),
+    RedisModule.forRoot([
+      ...redisHosts.map((host) => [host]),
+      redisClusterHosts,
+    ]),
     OtlpModule.forRoot({
       metrics: {
         hostMetrics: true,

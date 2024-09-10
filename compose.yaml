@@ -11,11 +11,12 @@ services:
       - 4318:4318
       - 55679:55679
     volumes:
-      - ./etc/otel-collector.yaml:/etc/otel-collector.yaml
-    command: --config=/etc/otel-collector.yaml
+      - ./docker/otel-collector.yaml:/etc/otel-collector-config.yaml
+    command: --config=/etc/otel-collector-config.yaml
     depends_on:
       - tempo
       - prometheus
+      - loki
 
   tempo:
     image: grafana/tempo:latest
@@ -27,28 +28,28 @@ services:
       - 4318
       - 9411
     volumes:
-      - ./etc/tempo.yaml:/etc/tempo.yaml
-    command: -config.file=/etc/tempo.yaml
+      - ./docker/tempo.yaml:/etc/tempo/tempo.yaml
+    command: -config.file=/etc/tempo/tempo.yaml
 
   loki:
     image: grafana/loki:latest
     container_name: niall-loki
     environment:
-      - JAEGER_AGENT_HOST=tempo
-      - JAEGER_ENDPOINT=http://tempo:14268/api/traces
-      - JAEGER_SAMPLER_TYPE=const
-      - JAEGER_SAMPLER_PARAM=1
+      JAEGER_AGENT_HOST: tempo
+      JAEGER_ENDPOINT: http://tempo:14268/api/traces
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
     ports:
       - 3100:3100
     volumes:
-      - ./etc/loki.yaml:/etc/loki/loki.yaml
-    command: -config.file=/etc/loki/loki.yaml
+      - ./docker/loki-config.yaml:/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
 
   promtail:
     image: grafana/promtail:latest
     container_name: niall-promtail
     volumes:
-      - ./etc/promtail.yaml:/etc/promtail/promtail.yaml
+      - ./docker/promtail.yaml:/etc/promtail/promtail.yaml
       - /var/run/docker.sock:/var/run/docker.sock
     command: -config.file=/etc/promtail/promtail.yaml
     depends_on:
@@ -60,9 +61,9 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./etc/prometheus.yaml:/etc/prometheus.yaml
+      - ./docker/prometheus.yaml:/etc/prometheus/prometheus.yaml
     command:
-      - --config.file=/etc/prometheus.yaml
+      - --config.file=/etc/prometheus/prometheus.yaml
       - --web.enable-remote-write-receiver
       - --enable-feature=exemplar-storage
     depends_on:
@@ -74,11 +75,11 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./etc/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - ./docker/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
     environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      GF_AUTH_ANONYMOUS_ENABLED: true
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_AUTH_DISABLE_LOGIN_FORM: true
     depends_on:
       - prometheus
       - tempo
@@ -113,6 +114,14 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: niall
       MONGO_INITDB_ROOT_PASSWORD: yourvoicematters
+
+  redis:
+    image: bitnami/redis:7.4.0
+    container_name: niall-redis
+    ports:
+      - 6378:6379
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
 
   redis01:
     image: docker.io/bitnami/redis-cluster:7.4
@@ -158,12 +167,14 @@ services:
       MONGO_DB: test
       KAFKA_BROKER: kafka:29092
       KAFKA_TOPIC: pets
-      REDIS_HOSTS: redis01:6379,redis02:6379,redis03:6379
+      REDIS_HOSTS: redis:6379
+      REDIS_CLUSTER_HOSTS: redis01:6379,redis02:6379,redis03:6379
       OTEL_METRIC_PORT: 8081
       OTEL_TRACE_URL: http://otel-collector:4318
     depends_on:
       - kafka
       - mongo
+      - redis
       - redis03
 
   indexer:
@@ -175,7 +186,11 @@ services:
       KAFKA_BROKER: kafka:29092
       KAFKA_TOPIC: pets
       KAFKA_GROUP_ID: indexer
+      REDIS_HOSTS: redis:6379
+      REDIS_CLUSTER_HOSTS: redis01:6379,redis02:6379,redis03:6379
       OTEL_METRIC_PORT: 8081
       OTEL_TRACE_URL: http://otel-collector:4318
     depends_on:
       - kafka
+      - redis
+      - redis03

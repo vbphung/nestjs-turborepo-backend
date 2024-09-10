@@ -38,6 +38,9 @@ importers:
       '@niall/pino':
         specifier: workspace:*
         version: link:../../packages/pino
+      '@niall/redis':
+        specifier: workspace:*
+        version: link:../../packages/redis
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5

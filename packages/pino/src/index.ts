@@ -11,7 +11,15 @@ const opts: Options = {
       const cur = trace.getSpan(context.active())
       if (!cur) return object
       const { spanId, traceId, traceFlags } = cur.spanContext()
-      return { ...object, spanId, traceId, traceFlags }
+      return {
+        ...object,
+        spanId,
+        traceId,
+        traceFlags,
+        span_id: spanId,
+        trace_id: traceId,
+        trace_flags: traceFlags,
+      }
     },
   },
 }

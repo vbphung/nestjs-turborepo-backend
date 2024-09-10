@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, Query } from "@nestjs/common"
 import { ApiCreatedResponse, ApiOkResponse, ApiProperty } from "@nestjs/swagger"
-import { IPet } from "@niall/pet"
-import { Type } from "class-transformer"
-import { IsArray, IsNotEmpty, Max, Min } from "class-validator"
+import { IPet, PetSort, SortOrder } from "@niall/pet"
+import { IsArray, IsEnum, IsNotEmpty, Max, Min } from "class-validator"
 import { AppService } from "./app.service"
+import { Type } from "class-transformer"
 
 class CreatePetsReq {
   @ApiProperty()
@@ -20,7 +20,7 @@ class Pet implements IPet {
   createdAt: Date
 }
 
-class Pagination {
+class Pagination implements PetSort {
   @ApiProperty({ example: 1 })
   @Min(0)
   @Type(() => Number)
@@ -31,6 +31,16 @@ class Pagination {
   @Max(512)
   @Type(() => Number)
   limit: number
+
+  @ApiProperty({ example: SortOrder.ASC })
+  @IsEnum(SortOrder)
+  @Type(() => Number)
+  name?: SortOrder
+
+  @ApiProperty({ example: SortOrder.DESC })
+  @IsEnum(SortOrder)
+  @Type(() => Number)
+  createdAt?: SortOrder
 }
 
 @Controller()
@@ -46,6 +56,6 @@ export class AppController {
   @Get("/pets")
   @ApiOkResponse({ type: [Pet] })
   async listPets(@Query() query: Pagination): Promise<IPet[]> {
-    return await this.app.listPets(query.page, query.limit)
+    return await this.app.listPets(query.page, query.limit, query)
   }
 }

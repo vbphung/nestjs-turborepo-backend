@@ -12,6 +12,7 @@ import {
   kafkaName,
   mongoDb,
   mongoUri,
+  redisClusterHosts,
   redisHosts,
 } from "./app.config"
 import { AppController } from "./app.controller"
@@ -34,7 +35,10 @@ import { AppService } from "./app.service"
       },
       producer: {},
     }),
-    RedisModule.forRoot(redisHosts),
+    RedisModule.forRoot([
+      redisClusterHosts,
+      ...redisHosts.map((host) => [host]),
+    ]),
     OtlpModule.forRoot({
       metrics: {
         hostMetrics: true,
