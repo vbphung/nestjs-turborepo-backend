@@ -8,7 +8,7 @@ on:
 jobs:
   indexer:
     name: Indexer
-    uses: jimmydrinkscoffee/niall/.github/workflows/docker.yaml@main
+    uses: vbphung/niall/.github/workflows/docker.yaml@main
     with:
       context: .
       file: ./apps/indexer/Dockerfile
@@ -17,7 +17,7 @@ jobs:
 
   shop:
     name: Shop
-    uses: jimmydrinkscoffee/niall/.github/workflows/docker.yaml@main
+    uses: vbphung/niall/.github/workflows/docker.yaml@main
     with:
       context: .
       file: ./apps/shop/Dockerfile

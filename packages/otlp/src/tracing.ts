@@ -7,7 +7,10 @@ import {
 } from "@opentelemetry/core"
 import { PrometheusExporter } from "@opentelemetry/exporter-prometheus"
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http"
+import { NestInstrumentation } from "@opentelemetry/instrumentation-nestjs-core"
+import { PinoInstrumentation } from "@opentelemetry/instrumentation-pino"
 import { B3InjectEncoding, B3Propagator } from "@opentelemetry/propagator-b3"
+import { JaegerPropagator } from "@opentelemetry/propagator-jaeger"
 import { Resource } from "@opentelemetry/resources"
 import { NodeSDK } from "@opentelemetry/sdk-node"
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
@@ -26,19 +29,26 @@ export function startOtlpSdk(opts: OtlpOpts): void {
     port: metricPort ?? 8081,
   })
 
-  const traceExported = new OTLPTraceExporter({
+  const traceExporter = new OTLPTraceExporter({
     url: `${traceUrl}/v1/traces`,
   })
 
-  const spanProcessor = new BatchSpanProcessor(traceExported)
+  const spanProcessor = new BatchSpanProcessor(traceExporter)
 
   const sdk = new NodeSDK({
+    serviceName: opts.service,
     metricReader,
+    traceExporter,
     spanProcessors: [spanProcessor],
     contextManager: new AsyncLocalStorageContextManager(),
-    instrumentations: [getNodeAutoInstrumentations()],
+    instrumentations: [
+      getNodeAutoInstrumentations(),
+      new NestInstrumentation(),
+      new PinoInstrumentation(),
+    ],
     textMapPropagator: new CompositePropagator({
       propagators: [
+        new JaegerPropagator(),
         new W3CTraceContextPropagator(),
         new W3CBaggagePropagator(),
         new B3Propagator(),
