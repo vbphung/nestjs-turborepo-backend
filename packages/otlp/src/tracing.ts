@@ -12,8 +12,7 @@ import { PinoInstrumentation } from "@opentelemetry/instrumentation-pino"
 import { B3InjectEncoding, B3Propagator } from "@opentelemetry/propagator-b3"
 import { JaegerPropagator } from "@opentelemetry/propagator-jaeger"
 import { Resource } from "@opentelemetry/resources"
-import { NodeSDK } from "@opentelemetry/sdk-node"
-import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base"
+import { NodeSDK, tracing } from "@opentelemetry/sdk-node"
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions"
 
 class OtlpOpts {
@@ -33,7 +32,7 @@ export function startOtlpSdk(opts: OtlpOpts): void {
     url: `${traceUrl}/v1/traces`,
   })
 
-  const spanProcessor = new BatchSpanProcessor(traceExporter)
+  const spanProcessor = new tracing.BatchSpanProcessor(traceExporter)
 
   const sdk = new NodeSDK({
     serviceName: opts.service,
